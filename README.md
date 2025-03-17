@@ -1,5 +1,4 @@
-# GitHubAgent
-Agent for updating auto-generated code with GitHub
+# GitHub Agent
 
 GitHub Agent is a smart assistant that can help you manage and automate various aspects of your projects hosted on GitHub. Here are some tasks a GitHub agent can handle:
 
