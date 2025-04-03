@@ -1,25 +1,24 @@
 from github import Github, Auth
-import os
-from config import GITHUB_ACCESS_TOKEN_ENV, GITHUB_ENTERPRISE_BASE_URL, DEFAULT_BASE_URL
+from config import DEFAULT_BASE_URL
 
 class GitHubClient:
-    def __init__(self, access_token=None, base_url=None):
+    def __init__(self, access_token, base_url):
         """
         Initialize the GitHubClient with an access token and base URL.
 
-        :param access_token: Optional GitHub access token. If not provided, it will be fetched from the environment variable.
-        :param base_url: Optional base URL for GitHub API. Defaults to the enterprise base URL or the public GitHub API URL.
+        :param access_token: GitHub access token.
+        :param base_url: Base URL for GitHub API.
         """
-        # Use the provided access token or fetch it from the environment variable.
-        self.access_token = access_token or os.getenv(GITHUB_ACCESS_TOKEN_ENV)
+        # Use the provided access token.
+        self.access_token = access_token
         if not self.access_token:
-            # Raise an error if the access token is not provided or not set in the environment.
-            raise ValueError(f"{GITHUB_ACCESS_TOKEN_ENV} environment variable is not set")
+            # Raise an error if the access token is not provided.
+            raise ValueError("Access token is required")
         
-        # Use the provided base URL or fetch it from the environment variable. Default to the public GitHub API URL.
-        self.base_url = base_url or os.getenv(GITHUB_ENTERPRISE_BASE_URL, DEFAULT_BASE_URL)
+        # Use the provided base URL.
+        self.base_url = base_url or DEFAULT_BASE_URL
         
-        # Authenticate using the provided or fetched access token.
+        # Authenticate using the provided access token.
         self.auth = Auth.Token(self.access_token)
         
         # Initialize the PyGithub client with the base URL and authentication.
