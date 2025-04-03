@@ -2,12 +2,20 @@ from github import Github, Auth
 from config import DEFAULT_BASE_URL
 
 class GitHubClient:
+    """
+    A client for interacting with the GitHub API using PyGithub.
+
+    This class provides methods to authenticate with GitHub, retrieve user information,
+    and list repositories. It uses an access token for authentication and supports
+    both the public GitHub API and GitHub Enterprise instances.
+    """
+
     def __init__(self, access_token, base_url):
         """
         Initialize the GitHubClient with an access token and base URL.
 
-        :param access_token: GitHub access token.
-        :param base_url: Base URL for GitHub API.
+        :param access_token: GitHub access token. This is required for authentication.
+        :param base_url: Base URL for GitHub API. Defaults to the public GitHub API if not provided.
         """
         # Use the provided access token.
         self.access_token = access_token
@@ -15,7 +23,7 @@ class GitHubClient:
             # Raise an error if the access token is not provided.
             raise ValueError("Access token is required")
         
-        # Use the provided base URL.
+        # Use the provided base URL or default to the public GitHub API URL.
         self.base_url = base_url or DEFAULT_BASE_URL
         
         # Authenticate using the provided access token.
@@ -24,7 +32,7 @@ class GitHubClient:
         # Initialize the PyGithub client with the base URL and authentication.
         self.github = Github(base_url=self.base_url, auth=self.auth)
 
-    def get_authenticated_user(self):
+    def getAuthenticatedUser(self):
         """
         Retrieve the authenticated user.
 
@@ -39,7 +47,7 @@ class GitHubClient:
             print("Error retrieving authenticated user:", error)
             raise
 
-    def list_repositories(self, per_page=30):
+    def listRepositories(self, per_page=30):
         """
         List repositories of the authenticated user.
 
@@ -49,7 +57,7 @@ class GitHubClient:
         """
         try:
             # Retrieve the authenticated user.
-            user = self.get_authenticated_user()
+            user = self.getAuthenticatedUser()
             # Fetch and return the repositories of the authenticated user.
             return user.get_repos(per_page=per_page)
         except Exception as error:
@@ -57,7 +65,7 @@ class GitHubClient:
             print("Error listing repositories:", error)
             raise
 
-    def close_connection(self):
+    def closeConnection(self):
         """
         Close the GitHub connection.
 
