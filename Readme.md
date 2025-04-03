@@ -13,6 +13,5 @@ Here are some tasks a GitHub agent can handle:
 6. **Notifications**: Send notifications to team members about important events, such as failed builds, new issues, or pull requests needing review.
 7. **Dependency Management**: Monitor and update project dependencies to ensure the codebase stays up-to-date with the latest versions.
 
-Install Octokit
-
-npm install @octokit/rest
+## Instal PyGithub for interation with GitHub
+pip install PyGithub
