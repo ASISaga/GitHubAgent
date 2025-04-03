@@ -65,6 +65,26 @@ class GitHubClient:
             print("Error listing repositories:", error)
             raise
 
+    def pushCommit(self, repo_name, commit_message, file_path, content):
+        """
+        Push a commit to a specified repository.
+
+        :param repo_name: Name of the repository to push to.
+        :param commit_message: Commit message for the push.
+        :param file_path: Path of the file to be committed.
+        :param content: Content of the file to be committed.
+        :raises: Exception if there is an error during the API call.
+        """
+        try:
+            # Retrieve the specified repository.
+            repo = self.github.get_repo(repo_name)
+            # Create or update the file in the repository with the provided content.
+            repo.create_file(file_path, commit_message, content)
+        except Exception as error:
+            # Print and re-raise the error if the API call fails.
+            print("Error pushing commit:", error)
+            raise
+
     def closeConnection(self):
         """
         Close the GitHub connection.
