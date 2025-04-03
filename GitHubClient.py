@@ -10,7 +10,7 @@ class GitHubClient:
     both the public GitHub API and GitHub Enterprise instances.
     """
 
-    def __init__(self, access_token, base_url):
+    def __init__(self, access_token, base_url, repo_name):
         """
         Initialize the GitHubClient with an access token and base URL.
 
@@ -31,6 +31,9 @@ class GitHubClient:
         
         # Initialize the PyGithub client with the base URL and authentication.
         self.github = Github(base_url=self.base_url, auth=self.auth)
+
+        self.repo = self.getRepository(repo_name=repo_name)
+        # Initialize the repository object using the provided repository name.
 
     def getAuthenticatedUser(self):
         """
@@ -65,25 +68,49 @@ class GitHubClient:
             print("Error listing repositories:", error)
             raise
 
-    def pushCommit(self, repo_name, commit_message, file_path, content):
+    def getRepository(self, repo_name):
+        """
+        Retrieve a specific repository by name.
+
+        :param repo_name: Name of the repository to retrieve.
+        :return: Repository object.
+        :raises: Exception if there is an error during the API call.
+        """
+        try:
+            # Fetch and return the specified repository using the PyGithub client.
+            self.repo = self.github.get_repo(repo_name)
+        except Exception as error:
+            # Print and re-raise the error if the API call fails.
+            print("Error retrieving repository:", error)
+            raise
+
+    def pushCommit(self, commit_message, file_path, content):
         """
         Push a commit to a specified repository.
-
-        :param repo_name: Name of the repository to push to.
+        Using PyGitHub, you don't "push" changes in the same way as you would with Git on your local machine (i.e., using a  command).
+        Instead, you interact directly with the GitHub API to commit changes. When you create or update a file using PyGitHub methods,
+        GitHub creates a commit in your repository. 
+        
         :param commit_message: Commit message for the push.
         :param file_path: Path of the file to be committed.
         :param content: Content of the file to be committed.
         :raises: Exception if there is an error during the API call.
         """
         try:
-            # Retrieve the specified repository.
-            repo = self.github.get_repo(repo_name)
+            # If the file exists, update it. This call creates a commit on your specified branch.
+            self.repo.update_file(file_path, commit_message, content, content.sha, branch="main")
+            print(f"Updated {file_path} successfully.")
+
             # Create or update the file in the repository with the provided content.
-            repo.create_file(file_path, commit_message, content)
         except Exception as error:
-            # Print and re-raise the error if the API call fails.
-            print("Error pushing commit:", error)
-            raise
+            try:
+                # If the file does not exist, create it instead.
+                self.repo.create_file(file_path, commit_message, content)
+                print(f"Created {file_path} successfully.")
+            except Exception as error:
+                # Print and re-raise the error if the API call fails.
+                print("Error pushing commit:", error)
+                raise
 
     def closeConnection(self):
         """

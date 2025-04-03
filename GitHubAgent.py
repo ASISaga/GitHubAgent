@@ -1,27 +1,34 @@
-import os
 from GitHubClient import GitHubClient
-from config import GITHUB_ACCESS_TOKEN_ENV, GITHUB_ENTERPRISE_BASE_URL
+from PurposeDrivenAgent.CoderAgent import CoderAgent
 
-if __name__ == "__main__":
-    # Fetch environment variables for access token and base URL.
-    # The access token is required to authenticate with the GitHub API.
-    # The base URL is optional and can be used to specify a custom GitHub Enterprise instance.
-    access_token = os.getenv(GITHUB_ACCESS_TOKEN_ENV)
-    base_url = os.getenv(GITHUB_ENTERPRISE_BASE_URL)
+class GitHubAgent(CoderAgent):
+    def __init__(self, access_token, base_url, repo_name):
+        """
+        Initialize the GitHubAgent with the required parameters.
 
-    # Create an instance of GitHubClient with the fetched parameters.
-    # This initializes the client with the provided access token and base URL.
-    client = GitHubClient(access_token=access_token, base_url=base_url)
-    try:
-        # List repositories of the authenticated user.
-        # The listRepositories method fetches the repositories associated with the authenticated user.
-        repos = client.listRepositories()
-        
-        # Print the name of each repository.
-        # Iterate through the repositories and display their names in the console.
-        for repo in repos:
-            print(repo.name)
-    finally:
-        # Ensure the connection is closed after use.
-        # Although PyGithub does not require explicit connection closure, this ensures proper cleanup.
-        client.closeConnection()
+        :param access_token: GitHub access token for authentication.
+        :param base_url: Base URL for GitHub or GitHub Enterprise.
+        :param repo_name: Name of the repository to interact with.
+        """
+        super().__init__()  # Call the base class constructor
+        self.access_token = access_token
+        self.base_url = base_url
+        self.repo_name = repo_name
+
+    def execute(self):
+        """
+        Execute the main functionality of the GitHubAgent.
+        Lists repositories of the authenticated user and prints their names.
+        """
+        # Create an instance of GitHubClient with the fetched parameters.
+        client = GitHubClient(access_token=self.access_token, base_url=self.base_url, repo_name=self.repo_name)
+        try:
+            # List repositories of the authenticated user.
+            repos = client.listRepositories()
+            
+            # Print the name of each repository.
+            for repo in repos:
+                print(repo.name)
+        finally:
+            # Ensure the connection is closed after use.
+            client.closeConnection()
