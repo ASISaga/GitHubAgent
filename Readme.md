@@ -13,5 +13,7 @@ Here are some tasks a GitHub agent can handle:
 6. **Notifications**: Send notifications to team members about important events, such as failed builds, new issues, or pull requests needing review.
 7. **Dependency Management**: Monitor and update project dependencies to ensure the codebase stays up-to-date with the latest versions.
 
-## Instal PyGithub for interation with GitHub
+## Install PyGithub for interaction with GitHub
+> **Note**: Ensure that Python and pip are installed on your system before running the following command.
+
 pip install PyGithub
